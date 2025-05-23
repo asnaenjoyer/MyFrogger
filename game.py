@@ -1,7 +1,7 @@
 import pygame
 from core.managers.scene_manager import SceneManager
 from core.managers.texture_manager import TextureManager
-from gameplay import Gameplay
+from scenes.gameplay import Gameplay
 
 class Game:
     def __init__(self, width=600, height=600):

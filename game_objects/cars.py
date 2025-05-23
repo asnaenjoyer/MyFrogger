@@ -1,18 +1,26 @@
-import pygame
+import math
 from game_objects.sprite_stack import SpriteStack
 from core.managers.texture_manager import TextureManager
+from ai.car_ai import AIType
 
 class Car(SpriteStack):
     textures_count = 9
-    def __init__(self, tm: TextureManager):
+    def __init__(self, tm: TextureManager, pos=(0,0), ai_type=AIType.LEFT):
         self.speed = 30
-        self.direction = (1,0)
         self.name = self.__class__.__name__
-        super().__init__(tm.get_slice(f"{self.name}_0", f"{self.name}_{self.textures_count-1}", True), (16,16))
+        super().__init__(tm.get_slice(f"{self.name}_0", f"{self.name}_{self.textures_count-1}", True), pos)
+        self._ai = ai_type
         
     def update(self, dt, *args, **kwargs):
-        self.move((self.speed * dt * self.direction[0], self.speed * dt * self.direction[1]))
-        self.rotate(1)
+        if self._ai:
+            self._ai(self, dt)
+        rad = math.radians(self.rotation)
+        dx = math.cos(rad)
+        dy = -math.sin(rad)  
+        self.move((dx * self.speed * dt, dy * self.speed * dt))
+        
+    def ai(self):
+        pass
         
 class GreenBigCar(Car):
     textures_count = 10
